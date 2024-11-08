@@ -8,14 +8,15 @@ import { definePluginSettings } from "@api/Settings";
 import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
-import { Devs } from "@utils/constants";
-import { openUserProfile } from "@utils/discord";
+import { getIntlMessageFromHash, openUserProfile } from "@utils/discord";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
-import { Clickable, Forms, i18n, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
+import { Clickable, Forms, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
 import { User } from "discord-types/general";
+
+const SPECTATORS_HASH = "BR7Tnp", NUM_USERS_HASH = "3uHFUV";
 
 interface WatchingProps {
     userIds: string[];
@@ -46,7 +47,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
         <div className={cl("content")}>
             {userIds.length ?
                 (<>
-                    <Forms.FormTitle>{i18n.Messages.SPECTATORS.format({ numViewers: userIds.length })}</Forms.FormTitle>
+                    <Forms.FormTitle>{getIntlMessageFromHash(SPECTATORS_HASH, { numViewers: userIds.length })}</Forms.FormTitle>
                     <Flex flexDirection="column" style={{ gap: 6 }} >
                         {users.map(user => (
                             <Flex flexDirection="row" style={{ gap: 6, alignContent: "center" }} className={cl("user")} >
@@ -54,7 +55,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
                                 {getUsername(user)}
                             </Flex>
                         ))}
-                        {missingUsers > 0 && <span className={cl("more_users")}>{`+${i18n.Messages.NUM_USERS.format({ num: missingUsers })}`}</span>}
+                        {missingUsers > 0 && <span className={cl("more_users")}>{`+${getIntlMessageFromHash(NUM_USERS_HASH, { num: missingUsers })}`}</span>}
                     </Flex>
                 </>)
                 : (<span className={cl("no_viewers")}>No spectators</span>)}
@@ -126,7 +127,7 @@ export default definePlugin({
                     {users.length ?
                         <>
                             <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0, textTransform: "uppercase" }}>
-                                {i18n.Messages.SPECTATORS.format({ numViewers: userIds.length })}
+                                {getIntlMessageFromHash(SPECTATORS_HASH, { numViewers: userIds.length })}
                             </Forms.FormTitle>
                             <UserSummaryItem
                                 users={users}
