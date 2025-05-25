@@ -84,11 +84,21 @@ export default definePlugin({
                 replace: "jsx)($self.component({OriginalComponent:$1}),{mask:"
             }
         },
+        /* Old panel patch
         {
             predicate: () => settings.store.showPanel,
             find: "this.renderEmbeddedActivity()",
             replacement: {
                 match: /(?<=children.{0,50})"div"(?=.{0,500}this\.renderEmbeddedActivity\(\))/,
+                replace: "$self.WrapperComponent"
+            }
+        }
+        */
+        { // New panel patch
+            predicate: () => settings.store.showPanel,
+            find: "this.renderEmbeddedActivity()",
+            replacement: {
+                match: /(?<=let{canGoLive.{0,500}\()"div"(?=,{className:\i\.body)/,
                 replace: "$self.WrapperComponent"
             }
         }
