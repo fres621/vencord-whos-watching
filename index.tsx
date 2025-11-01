@@ -14,7 +14,8 @@ import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
 import { Clickable, Forms, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
-import { User } from "discord-types/general";
+import { User } from "@vencord/discord-types";
+import type { JSX } from "react";
 
 interface WatchingProps {
     userIds: string[];
@@ -84,21 +85,11 @@ export default definePlugin({
                 replace: "jsx)($self.component({OriginalComponent:$1}),{mask:"
             }
         },
-        /* Old panel patch
-        {
-            predicate: () => settings.store.showPanel,
-            find: "this.renderEmbeddedActivity()",
-            replacement: {
-                match: /(?<=children.{0,50})"div"(?=.{0,500}this\.renderEmbeddedActivity\(\))/,
-                replace: "$self.WrapperComponent"
-            }
-        }
-        */
         { // New panel patch
             predicate: () => settings.store.showPanel,
             find: "this.renderEmbeddedActivity()",
             replacement: {
-                match: /(?<=let{canGoLive.{0,500}\()"div"(?=,{className:\i\.body)/,
+                match: /(?<=let{canGoLive.{0,1500}\()"div"(?=,{className:\i\.body)/,
                 replace: "$self.WrapperComponent"
             }
         }
