@@ -12,9 +12,9 @@ import { getIntlMessage, openUserProfile } from "@utils/discord";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByPropsLazy, findComponentByCodeLazy, findStoreLazy } from "@webpack";
-import { Clickable, Forms, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
 import { User } from "@vencord/discord-types";
+import { findComponentByCodeLazy, findCssClassesLazy, findStoreLazy } from "@webpack";
+import { Clickable, Forms, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
 import type { JSX } from "react";
 
 interface WatchingProps {
@@ -49,7 +49,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
                     <Forms.FormTitle>{getIntlMessage("SPECTATORS", { numViewers: userIds.length })}</Forms.FormTitle>
                     <Flex flexDirection="column" style={{ gap: 6 }} >
                         {users.map(user => (
-                            <Flex flexDirection="row" style={{ gap: 6, alignContent: "center" }} className={cl("user")} >
+                            <Flex key={user.id} flexDirection="row" style={{ gap: 6, alignContent: "center" }} className={cl("user")} >
                                 <img src={user.getAvatarURL(guildId)} style={{ borderRadius: 8, width: 16, height: 16 }} />
                                 {getUsername(user)}
                             </Flex>
@@ -65,7 +65,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
 const ApplicationStreamingStore = findStoreLazy("ApplicationStreamingStore");
 
 const UserSummaryItem = findComponentByCodeLazy("defaultRenderUser", "showDefaultAvatarsForNullUsers");
-const AvatarStyles = findByPropsLazy("moreUsers", "emptyUser", "avatarContainer", "clickableAvatar");
+const AvatarStyles = findCssClassesLazy("moreUsers", "clickableAvatar", "avatar");
 
 export default definePlugin({
     name: "WhosWatching",
@@ -89,7 +89,7 @@ export default definePlugin({
             predicate: () => settings.store.showPanel,
             find: "this.renderEmbeddedActivity()",
             replacement: {
-                match: /(?<=let{canGoLive.{0,1500}\()"div"(?=,{className:\i\.body)/,
+                match: /(?<=let{canGoLive.{0,1500}\()"div"(?=,{className:\i(?:\.body|\(\)\())/,
                 replace: "$self.WrapperComponent"
             }
         }
