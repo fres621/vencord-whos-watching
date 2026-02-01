@@ -5,16 +5,17 @@
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
+import { Heading } from "@components/Heading";
+import { Paragraph } from "@components/Paragraph";
+import { classNameFactory } from "@utils/css";
 import { getIntlMessage, openUserProfile } from "@utils/discord";
-import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
 import { User } from "@vencord/discord-types";
 import { findComponentByCodeLazy, findCssClassesLazy, findStoreLazy } from "@webpack";
-import { Clickable, Forms, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
+import { Clickable, RelationshipStore, Tooltip, UserStore, useStateFromStores } from "@webpack/common";
 import type { JSX } from "react";
 
 interface WatchingProps {
@@ -46,7 +47,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
         <div className={cl("content")}>
             {userIds.length ?
                 (<>
-                    <Forms.FormTitle>{getIntlMessage("SPECTATORS", { numViewers: userIds.length })}</Forms.FormTitle>
+                    <Heading>{getIntlMessage("SPECTATORS", { numViewers: userIds.length })}</Heading>
                     <Flex flexDirection="column" style={{ gap: 6 }} >
                         {users.map(user => (
                             <Flex key={user.id} flexDirection="row" style={{ gap: 6, alignContent: "center" }} className={cl("user")} >
@@ -65,6 +66,7 @@ function Watching({ userIds, guildId }: WatchingProps): JSX.Element {
 const ApplicationStreamingStore = findStoreLazy("ApplicationStreamingStore");
 
 const UserSummaryItem = findComponentByCodeLazy("defaultRenderUser", "showDefaultAvatarsForNullUsers");
+const ActivityPanelStyles = findCssClassesLazy("activityPanel");
 const AvatarStyles = findCssClassesLazy("moreUsers", "clickableAvatar", "avatar");
 
 export default definePlugin({
@@ -122,12 +124,12 @@ export default definePlugin({
         return (
             <>
                 <div {...props}>{props.children}</div>
-                <div className={classes(cl("spectators_panel"), Margins.top8)}>
+                <div className={classes(cl("spectators_panel"), ActivityPanelStyles.activityPanel)}>
                     {users.length ?
                         <>
-                            <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0, textTransform: "uppercase" }}>
+                            <Heading tag="h3" style={{ marginTop: 0, marginBottom: 0, textTransform: "uppercase" }}>
                                 {getIntlMessage("SPECTATORS", { numViewers: userIds.length })}
-                            </Forms.FormTitle>
+                            </Heading>
                             <UserSummaryItem
                                 users={users}
                                 count={userIds.length}
@@ -150,7 +152,7 @@ export default definePlugin({
                                 )}
                             />
                         </>
-                        : <Forms.FormText>No spectators</Forms.FormText>
+                        : <Paragraph>No spectators</Paragraph>
                     }
                 </div>
             </>
