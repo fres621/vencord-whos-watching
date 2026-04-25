@@ -89,10 +89,10 @@ export default definePlugin({
         },
         { // New panel patch
             predicate: () => settings.store.showPanel,
-            find: "this.renderEmbeddedActivity()",
+            find: "this.renderVoicePanelIntroduction",
             replacement: {
-                match: /(?<=let{canGoLive.{0,1500}\()"div"(?=,{className:\i(?:\.body|\(\)\())/,
-                replace: "$self.WrapperComponent"
+                match: /(let{(?:channel:\i,)?canGoLive.{0,1500}\()"div"(?=,{(?:ref:this\.ref,)?className:\i(?:\.body|\(\)\(|\.\i))/,
+                replace: "$1$self.WrapperComponent"
             }
         }
     ],
@@ -123,7 +123,6 @@ export default definePlugin({
 
         return (
             <>
-                <div {...props}>{props.children}</div>
                 <div className={classes(cl("spectators_panel"), ActivityPanelStyles.activityPanel)}>
                     {users.length ?
                         <>
@@ -155,6 +154,7 @@ export default definePlugin({
                         : <Paragraph>No spectators</Paragraph>
                     }
                 </div>
+                <div {...props}>{props.children}</div>
             </>
         );
     }),
