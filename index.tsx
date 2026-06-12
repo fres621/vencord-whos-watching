@@ -89,15 +89,16 @@ export default definePlugin({
         },
         { // New panel patch
             predicate: () => settings.store.showPanel,
-            find: "this.renderVoicePanelIntroduction",
+            find: "#{intl::vTl6Lk::raw}",
             replacement: {
-                match: /(let{(?:channel:\i,)?canGoLive.{0,1500}\()"div"(?=,{(?:ref:this\.ref,)?className:\i(?:\.body|\(\)\(|\.\i))/,
-                replace: "$1$self.WrapperComponent"
+                match: /ACTIVITY_PANEL,children:\(0.{0,100}?(?=,\(0)/,
+                replace: "$&,$self.WrapperComponent()"
             }
         }
     ],
     WrapperComponent: ErrorBoundary.wrap(props => {
         const stream = useStateFromStores([ApplicationStreamingStore], () => ApplicationStreamingStore.getCurrentUserActiveStream());
+        // TODO: consider removing the `props.children` as it's no more a wrapper
         if (!stream) return <div {...props}>{props.children}</div>;
 
         const userIds: string[] = ApplicationStreamingStore.getViewerIds(stream);
